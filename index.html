@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>生成式人工智能赋能商业数据分析与管理决策虚拟仿真实训平台</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <div class="brand">生成式人工智能赋能商业数据分析与管理决策虚拟仿真实训平台</div>
+      <div class="subtitle">教学任务 - 数据实验 - AI助教 - 协作互评 - 报告生成 - 教师反馈</div>
+    </div>
+    <div id="topUserArea"></div>
+  </header>
+
+  <main class="container">
+    <section id="loginView" class="hero">
+      <div class="hero-copy">
+        <h1>线上演示版平台</h1>
+        <p>本平台覆盖“教师建课、学生扫码进入、数据实验、生成式AI提示、小组协作、报告生成、教师反馈”的完整教学闭环，适用于《商业数据分析》《管理决策分析》《商务智能》等课程的教学演示与竞赛展示。</p>
+        <div class="info-grid">
+          <div class="mini-card">
+            <h3>教师端</h3>
+            <p>创建课程任务、发布二维码入口、查看提交与评分反馈。</p>
+          </div>
+          <div class="mini-card">
+            <h3>学生端</h3>
+            <p>扫码进入任务、上传CSV、完成分析、获得AI提示并生成报告。</p>
+          </div>
+          <div class="mini-card">
+            <h3>管理员端</h3>
+            <p>查看账号、任务、提交概览，支撑演示与运行说明。</p>
+          </div>
+        </div>
+        <div class="callout">
+          <div><strong>演示账号</strong></div>
+          <div>教师：teacher01 / Teacher@123</div>
+          <div>学生：student01 / Student@123</div>
+          <div>管理员：admin01 / Admin@123</div>
+        </div>
+      </div>
+      <form id="loginForm" class="panel">
+        <h2>账号登录</h2>
+        <label>用户名<input name="username" required /></label>
+        <label>密码<input type="password" name="password" required /></label>
+        <button class="btn primary" type="submit">登录平台</button>
+      </form>
+    </section>
+
+    <section id="appView" class="hidden">
+      <div class="panel page-head">
+        <h1 id="roleTitle"></h1>
+        <p id="roleDesc"></p>
+      </div>
+
+      <div id="teacherView" class="role-view hidden">
+        <div class="grid two">
+          <section class="panel">
+            <div class="section-head">
+              <h2>课程任务管理</h2>
+              <button class="btn ghost" onclick="seedDemo()">恢复演示数据</button>
+            </div>
+            <div id="teacherTasks"></div>
+          </section>
+          <section class="panel">
+            <h2>新建任务</h2>
+            <form id="taskForm">
+              <label>任务名称<input name="title" required /></label>
+              <label>实验目标<textarea name="objective" rows="3" required></textarea></label>
+              <label>数据说明<textarea name="datasetHint" rows="3" required></textarea></label>
+              <label>截止日期<input type="date" name="dueDate" required /></label>
+              <button class="btn primary" type="submit">创建任务</button>
+            </form>
+            <div class="callout">
+              <div><strong>二维码使用说明</strong></div>
+              <div>部署到公网后，将 BASE_URL 写入设置并运行 scripts/generate_qr.py，即可批量生成学生扫码入口二维码。</div>
+            </div>
+          </section>
+        </div>
+        <section class="panel">
+          <h2>学生提交与评分反馈</h2>
+          <div id="teacherSubmissions"></div>
+        </section>
+      </div>
+
+      <div id="studentView" class="role-view hidden">
+        <div class="grid two">
+          <section class="panel">
+            <h2>任务中心</h2>
+            <div id="studentTasks"></div>
+          </section>
+          <section class="panel">
+            <h2>任务说明与扫码入口</h2>
+            <div id="studentTaskInfo" class="muted">请选择左侧任务。</div>
+          </section>
+        </div>
+
+        <div class="grid two">
+          <section class="panel">
+            <h2>步骤1：上传CSV并生成分析</h2>
+            <form id="uploadForm">
+              <label>选择任务
+                <select id="taskSelector"></select>
+              </label>
+              <label>选择CSV数据文件<input id="csvFile" type="file" accept=".csv" /></label>
+              <label>向AI助教提问
+                <textarea id="aiQuestion" rows="3">请基于数据特征给出分析思路、关键指标解释与管理决策建议。</textarea>
+              </label>
+              <button class="btn primary" type="submit">上传并分析</button>
+            </form>
+            <div id="dataSummary"></div>
+            <div id="dataPreview"></div>
+          </section>
+
+          <section class="panel">
+            <h2>步骤2：AI提示与实验报告</h2>
+            <div id="aiAnswer" class="report empty">上传数据后显示AI提示。</div>
+            <div id="reportText" class="report empty">上传数据后自动生成实验报告。</div>
+          </section>
+        </div>
+
+        <div class="grid two">
+          <section class="panel">
+            <h2>步骤3：小组协作讨论</h2>
+            <form id="commentForm">
+              <label>选择任务
+                <select id="commentTaskSelector"></select>
+              </label>
+              <label>讨论内容<textarea id="commentInput" rows="3" placeholder="请输入分析发现、分工安排或改进建议"></textarea></label>
+              <button class="btn primary" type="submit">提交讨论</button>
+            </form>
+          </section>
+          <section class="panel">
+            <h2>讨论记录</h2>
+            <div id="commentList"></div>
+          </section>
+        </div>
+      </div>
+
+      <div id="adminView" class="role-view hidden">
+        <div class="grid three" id="adminStats"></div>
+        <section class="panel">
+          <h2>平台闭环说明</h2>
+          <p>本平台为纯前端可部署版本，可直接上传到 GitHub Pages、Netlify、Vercel 静态托管等平台形成公网演示地址。平台流程覆盖“建课 - 扫码 - 上传数据 - AI提示 - 协作讨论 - 报告生成 - 评价反馈”闭环。</p>
+        </section>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div>示范版平台源码可直接部署为线上演示系统。</div>
+    <div id="footerBaseUrl">BASE_URL：待设置</div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
